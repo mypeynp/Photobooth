@@ -29,7 +29,7 @@ export default function Photobooth() {
           </div>
         )}
         {/* กรอบรูป (Overlay) */}
-       <img src="/frame1.png" className="absolute inset-0 w-full h-full pointer-events-none" />
+       <img src="/my-frame.png" className="absolute inset-0 w-full h-full pointer-events-none z-10" />
       </div>
 
       {/* เมนูเลือกกรอบรูป */}
