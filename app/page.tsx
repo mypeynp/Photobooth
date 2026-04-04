@@ -17,7 +17,7 @@ export default function Photobooth() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4">
-      <h1 className="text-3xl font-bold mb-8 text-slate-800">📸 My Photobooth</h1>
+      <h1 className="text-3xl font-bold mb-8 text-slate-800"> Photobooth</h1>
 
       {/* พื้นที่แสดงผลรูปภาพและกรอบ */}
       <div className="relative w-72 h-96 bg-white shadow-2xl overflow-hidden border-4 border-white mb-8">
@@ -29,7 +29,7 @@ export default function Photobooth() {
           </div>
         )}
         {/* กรอบรูป (Overlay) */}
-       <img src="/my-frame.png" className="absolute inset-0 w-full h-full pointer-events-none z-10" />
+       <img src="/my-frame.png" className="absolute inset-0 w-full h-full pointer-events-none z-10" /> alt="Frame"
       </div>
 
       {/* เมนูเลือกกรอบรูป */}
