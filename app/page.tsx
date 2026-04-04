@@ -10,7 +10,7 @@ export default function Photobooth() {
 
   // รายชื่อกรอบรูปที่มีในโฟลเดอร์ public (แก้ชื่อให้ตรงกับไฟล์จริงของคุณ)
   const frames = [
-    { id: 1, src: '/my-frame.png', label: 'กรอบ 1' },
+    { id: 1, src: '/frame1.png', label: 'กรอบ 1' },
     { id: 2, src: '/frame2.png', label: 'กรอบ 2' },
     { id: 3, src: '/frame3.png', label: 'กรอบ 3' },
   ];
