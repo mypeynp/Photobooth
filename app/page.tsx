@@ -137,7 +137,7 @@ export default function PhotoboothApp() {
     link.click();
   };
 
-  if (page === 'welcome') {
+if (page === 'welcome') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6 text-center">
         <div className="max-w-md w-full">
@@ -149,11 +149,13 @@ export default function PhotoboothApp() {
               onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/800x1200?text=welcome.jpg"; }}
             />
           </div>
-          <h1 className="text-4xl font-bold text-pink-600 mb-2">Photobooth</h1>
+          {/* 1. แก้ไขข้อความ Photobooth เป็นสีแดงเข้ม */}
+          <h1 className="text-4xl font-bold text-red-700 mb-2">Photobooth</h1>
           <p className="text-gray-500 mb-10">Capture your moments with style</p>
           <button 
             onClick={() => setPage('editor')}
-            className="bg-pink-500 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all active:scale-95"
+            {/* 2. แก้ไขปุ่มเป็นสีแดงเข้ม */}
+            className="bg-red-700 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-red-800 transition-all active:scale-95"
           >
             เข้าสู่ Photobooth →
           </button>
