@@ -1,21 +1,14 @@
-@import url('https://cdn.jsdelivr.net/gh/line/line-seed-sans-th@main/assets/css/line-seed-th.css');
+import type { Config } from "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-line-seed: 'LineSeedTH', sans-serif;
-}
-
-/* บังคับใช้กับทุกส่วนของเว็บไซต์ */
-* {
-  font-family: var(--font-line-seed) !important;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-}
+const config: Config = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+export default config;
