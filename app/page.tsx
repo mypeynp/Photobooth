@@ -32,12 +32,12 @@ export default function PhotoboothApp() {
     setIsCameraOpen(true);
     setShowUploadOption(false);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
     } catch (err) {
-      alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาตสิทธิ์");
+      alert("ไม่สามารถเข้าถึงกล้องได้");
       setIsCameraOpen(false);
     }
   };
@@ -107,6 +107,7 @@ export default function PhotoboothApp() {
         const destX = padding + (col * (slotW + padding));
         const destY = padding + (row * (slotH + padding));
 
+        // --- แก้ไขรูปบีบด้วย Center Crop ---
         const imgRatio = img.width / img.height;
         const slotRatio = slotW / slotH;
         let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
@@ -140,7 +141,7 @@ export default function PhotoboothApp() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6 text-center">
         <div className="max-w-md w-full">
-          <div className="mb-8 rounded-3xl overflow-hidden border-8 border-white bg-white shadow-xl">
+          <div className="mb-8 rounded-3xl overflow-hidden border-8 border-white bg-white">
             <img 
               src="/welcome.jpg" 
               alt="Welcome" 
@@ -148,12 +149,11 @@ export default function PhotoboothApp() {
               onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/800x1200?text=welcome.jpg"; }}
             />
           </div>
-          {/* แก้เป็นสีแดงเข้ม */}
-          <h1 className="text-4xl font-bold text-red-800 mb-2">Photobooth</h1>
-          <p className="text-gray-500 mb-10 italic">Capture your moments with style</p>
+          <h1 className="text-4xl font-bold text-red-600 mb-2">Photobooth</h1>
+          <p className="text-gray-500 mb-10">forever and always from yoyr piranha</p>
           <button 
             onClick={() => setPage('editor')}
-            className="bg-red-800 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-red-900 transition-all active:scale-95"
+            className="bg-red-600 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-red-600 transition-all active:scale-95"
           >
             เข้าสู่ Photobooth →
           </button>
@@ -172,7 +172,7 @@ export default function PhotoboothApp() {
                 <div 
                   key={i} 
                   onClick={() => { setCurrentSlot(i); setShowUploadOption(true); }}
-                  className={`relative bg-gray-50 border border-dashed cursor-pointer flex items-center justify-center overflow-hidden ${currentSlot === i ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                  className="relative bg-gray-50 border border-dashed border-gray-300 cursor-pointer flex items-center justify-center overflow-hidden"
                 >
                   {img ? (
                     <img 
@@ -191,16 +191,16 @@ export default function PhotoboothApp() {
         </div>
 
         <div className="w-full max-w-xs space-y-6">
-          <button onClick={() => setPage('welcome')} className="text-sm text-gray-400 hover:text-red-700 font-mono transition-colors">← Home</button>
+          <button onClick={() => setPage('welcome')} className="text-sm text-gray-400 hover:text-gray-600 font-mono">← Home</button>
           
           <div>
-            <p className="font-semibold mb-3 text-slate-700 font-mono text-sm border-l-4 border-red-700 pl-2">SELECT FILTER:</p>
+            <p className="font-semibold mb-3 text-slate-700 font-mono text-sm">SELECT FILTER:</p>
             <div className="flex flex-wrap gap-2">
               {filters.map((f) => (
                 <button 
                   key={f.name}
                   onClick={() => setFilter(f.value)}
-                  className={`px-3 py-1 text-xs rounded-full border transition-all ${filter === f.value ? 'bg-red-700 text-white border-red-700 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-red-300'}`}
+                  className={`px-3 py-1 text-xs rounded-full border transition-all ${filter === f.value ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-200'}`}
                 >
                   {f.name}
                 </button>
@@ -209,43 +209,42 @@ export default function PhotoboothApp() {
           </div>
 
           <div>
-            <p className="font-semibold mb-3 text-slate-700 font-mono text-sm border-l-4 border-red-700 pl-2">SELECT FRAME:</p>
+            <p className="font-semibold mb-3 text-slate-700 font-mono text-sm">SELECT FRAME:</p>
             <div className="grid grid-cols-3 gap-2">
               {frames.map((f) => (
-                <button key={f.id} onClick={() => setCurrentFrame(f.src)} className={`border-2 p-1 rounded-md transition-all ${currentFrame === f.src ? 'border-red-700 scale-105 shadow-md' : 'border-transparent opacity-50 hover:opacity-100'}`}>
+                <button key={f.id} onClick={() => setCurrentFrame(f.src)} className={`border-2 p-1 rounded-md transition-all ${currentFrame === f.src ? 'border-pink-500 scale-105' : 'border-transparent opacity-50'}`}>
                   <img src={f.src} className="w-full h-12 object-contain" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* ปุ่ม SAVE เป็นสีแดงเข้ม */}
-          <button onClick={saveAsJpg} className="w-full bg-red-800 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-red-900 transition-all active:scale-95 font-mono">SAVE AS JPG</button>
+          <button onClick={saveAsJpg} className="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-pink-600 transition-all active:scale-95 font-mono">SAVE AS JPG</button>
         </div>
       </div>
 
       {showUploadOption && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center space-y-4 shadow-2xl">
-            <h3 className="text-xl font-bold text-gray-800">ช่องที่ {currentSlot + 1}</h3>
-            <button onClick={startCamera} className="w-full py-4 bg-red-700 text-white rounded-xl font-bold hover:bg-red-800 transition-colors shadow-md">📸 ถ่ายภาพ</button>
-            <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold hover:bg-gray-200 transition-colors">📂 เลือกจากเครื่อง</button>
-            <button onClick={() => setShowUploadOption(false)} className="w-full py-2 text-gray-400 text-sm hover:text-gray-600">ยกเลิก</button>
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center space-y-4">
+            <h3 className="text-xl font-bold">เพิ่มรูปภาพในช่องที่ {currentSlot + 1}</h3>
+            <button onClick={startCamera} className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">📸 ถ่ายภาพ</button>
+            <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 bg-gray-100 text-gray-800 rounded-xl font-bold hover:bg-gray-200">📂 เลือกจากเครื่อง</button>
+            <button onClick={() => setShowUploadOption(false)} className="w-full py-2 text-gray-400 text-sm">ยกเลิก</button>
           </div>
         </div>
       )}
 
       {isCameraOpen && (
         <div className="fixed inset-0 bg-black z-[60] flex flex-col items-center justify-center p-4">
-          <div className="relative w-full max-w-lg aspect-video bg-gray-900 rounded-2xl overflow-hidden border-4 border-red-700 shadow-2xl">
-            <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ filter: filter }} />
-            <div className="absolute top-4 right-4 bg-red-700 text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">LIVE</div>
+          <div className="relative w-full max-w-lg aspect-video bg-gray-900 rounded-2xl overflow-hidden border-4 border-white">
+            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" style={{ filter: filter }} />
           </div>
-          <div className="mt-8 flex items-center gap-8">
-            <button onClick={stopCamera} className="text-white hover:text-red-400 transition-colors">Cancel</button>
-            <button onClick={takePhoto} className="w-20 h-20 bg-white rounded-full border-8 border-red-700 active:scale-90 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"></button>
-            <div className="w-12"></div>
+          <div className="mt-8 flex gap-6">
+            <button onClick={stopCamera} className="bg-white/20 text-white px-6 py-3 rounded-full hover:bg-white/30">Close</button>
+            <button onClick={takePhoto} className="w-20 h-20 bg-white rounded-full border-8 border-gray-300 active:scale-90 transition-all shadow-xl"></button>
+            <div className="w-20"></div>
           </div>
+          <p className="text-white mt-4 font-mono">Smile!</p>
         </div>
       )}
 
