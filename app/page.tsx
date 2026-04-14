@@ -28,7 +28,6 @@ export default function PhotoboothApp() {
     { name: 'Cool', value: 'contrast(1.1) brightness(1.1) hue-rotate(180deg)' },
   ];
 
-  // ฟังก์ชันเปิดกล้อง
   const startCamera = async () => {
     setIsCameraOpen(true);
     setShowUploadOption(false);
@@ -43,7 +42,6 @@ export default function PhotoboothApp() {
     }
   };
 
-  // ฟังก์ชันถ่ายรูป
   const takePhoto = () => {
     const video = videoRef.current;
     if (video) {
@@ -52,7 +50,7 @@ export default function PhotoboothApp() {
       tempCanvas.height = video.videoHeight;
       const ctx = tempCanvas.getContext('2d');
       if (ctx) {
-        ctx.filter = filter; // ใส่ฟิลเตอร์ลงในรูปที่ถ่าย
+        ctx.filter = filter;
         ctx.drawImage(video, 0, 0);
         const data = tempCanvas.toDataURL('image/jpeg');
         const newImages = [...images];
@@ -103,12 +101,28 @@ export default function PhotoboothApp() {
         const img = new Image();
         img.src = images[i]!;
         await new Promise((resolve) => { img.onload = resolve; });
+        
         const col = i % 2;
         const row = Math.floor(i / 2);
-        // วาดรูปพร้อมฟิลเตอร์ลงบน Canvas หลัก
+        const destX = padding + (col * (slotW + padding));
+        const destY = padding + (row * (slotH + padding));
+
+        // --- แก้ไขรูปบีบด้วย Center Crop ---
+        const imgRatio = img.width / img.height;
+        const slotRatio = slotW / slotH;
+        let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
+
+        if (imgRatio > slotRatio) {
+          srcW = img.height * slotRatio;
+          srcX = (img.width - srcW) / 2;
+        } else {
+          srcH = img.width / slotRatio;
+          srcY = (img.height - srcH) / 2;
+        }
+
         ctx.filter = filter; 
-        ctx.drawImage(img, padding + (col * (slotW + padding)), padding + (row * (slotH + padding)), slotW, slotH);
-        ctx.filter = 'none'; // reset filter สำหรับกรอบรูป
+        ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, slotW, slotH);
+        ctx.filter = 'none'; 
       }
     }
 
@@ -125,13 +139,24 @@ export default function PhotoboothApp() {
 
   if (page === 'welcome') {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-pink-50 p-6 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6 text-center">
         <div className="max-w-md w-full">
-          <div className="mb-8 rounded-3xl overflow-hidden shadow-2xl border-8 border-white bg-white">
-            <img src="/welcome.jpg" alt="Welcome" className="w-full h-auto object-cover min-h-[300px]" onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/800x1200?text=welcome.jpg"; }} />
+          <div className="mb-8 rounded-3xl overflow-hidden border-8 border-white bg-white">
+            <img 
+              src="/welcome.jpg" 
+              alt="Welcome" 
+              className="w-full h-auto object-cover min-h-[300px]"
+              onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/800x1200?text=welcome.jpg"; }}
+            />
           </div>
-          <h1 className="text-4xl font-bold text-pink-600 mb-2 font-mono">My Photobooth</h1>
-          <button onClick={() => setPage('editor')} className="bg-pink-500 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all active:scale-95">เข้าสู่ Photobooth →</button>
+          <h1 className="text-4xl font-bold text-pink-600 mb-2">Photobooth</h1>
+          <p className="text-gray-500 mb-10">Capture your moments with style</p>
+          <button 
+            onClick={() => setPage('editor')}
+            className="bg-pink-500 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all active:scale-95"
+          >
+            เข้าสู่ Photobooth →
+          </button>
         </div>
       </div>
     );
@@ -140,8 +165,6 @@ export default function PhotoboothApp() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-6">
       <div className="flex flex-col md:flex-row gap-8 items-center md:items-start max-w-5xl">
-        
-        {/* Photobooth Display */}
         <div className="bg-white p-3 shadow-2xl rounded-sm border border-gray-100">
           <div className="relative w-64 h-[400px] bg-white overflow-hidden">
             <div className="grid grid-cols-2 grid-rows-2 gap-2 p-3 h-full">
@@ -151,7 +174,15 @@ export default function PhotoboothApp() {
                   onClick={() => { setCurrentSlot(i); setShowUploadOption(true); }}
                   className="relative bg-gray-50 border border-dashed border-gray-300 cursor-pointer flex items-center justify-center overflow-hidden"
                 >
-                  {img ? <img src={img} style={{ filter: filter }} className="w-full h-full object-cover" /> : <span className="text-[10px] text-gray-400 font-mono">Slot {i+1}</span>}
+                  {img ? (
+                    <img 
+                      src={img} 
+                      style={{ filter: filter }} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <span className="text-[10px] text-gray-400 font-mono">Slot {i+1}</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -159,11 +190,9 @@ export default function PhotoboothApp() {
           </div>
         </div>
 
-        {/* Controls */}
         <div className="w-full max-w-xs space-y-6">
           <button onClick={() => setPage('welcome')} className="text-sm text-gray-400 hover:text-gray-600 font-mono">← Home</button>
           
-          {/* Filter Selection */}
           <div>
             <p className="font-semibold mb-3 text-slate-700 font-mono text-sm">SELECT FILTER:</p>
             <div className="flex flex-wrap gap-2">
@@ -179,7 +208,6 @@ export default function PhotoboothApp() {
             </div>
           </div>
 
-          {/* Frame Selection */}
           <div>
             <p className="font-semibold mb-3 text-slate-700 font-mono text-sm">SELECT FRAME:</p>
             <div className="grid grid-cols-3 gap-2">
@@ -195,7 +223,6 @@ export default function PhotoboothApp() {
         </div>
       </div>
 
-      {/* Upload/Camera Option Modal */}
       {showUploadOption && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center space-y-4">
@@ -207,7 +234,6 @@ export default function PhotoboothApp() {
         </div>
       )}
 
-      {/* Camera Modal */}
       {isCameraOpen && (
         <div className="fixed inset-0 bg-black z-[60] flex flex-col items-center justify-center p-4">
           <div className="relative w-full max-w-lg aspect-video bg-gray-900 rounded-2xl overflow-hidden border-4 border-white">
@@ -216,7 +242,7 @@ export default function PhotoboothApp() {
           <div className="mt-8 flex gap-6">
             <button onClick={stopCamera} className="bg-white/20 text-white px-6 py-3 rounded-full hover:bg-white/30">Close</button>
             <button onClick={takePhoto} className="w-20 h-20 bg-white rounded-full border-8 border-gray-300 active:scale-90 transition-all shadow-xl"></button>
-            <div className="w-20"></div> {/* Spacer */}
+            <div className="w-20"></div>
           </div>
           <p className="text-white mt-4 font-mono">Smile!</p>
         </div>
