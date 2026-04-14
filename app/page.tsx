@@ -107,7 +107,6 @@ export default function PhotoboothApp() {
         const destX = padding + (col * (slotW + padding));
         const destY = padding + (row * (slotH + padding));
 
-        // --- แก้ไขรูปบีบด้วย Center Crop ---
         const imgRatio = img.width / img.height;
         const slotRatio = slotW / slotH;
         let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
@@ -137,7 +136,7 @@ export default function PhotoboothApp() {
     link.click();
   };
 
-if (page === 'welcome') {
+  if (page === 'welcome') {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6 text-center">
         <div className="max-w-md w-full">
@@ -149,12 +148,10 @@ if (page === 'welcome') {
               onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/800x1200?text=welcome.jpg"; }}
             />
           </div>
-          {/* 1. แก้ไขข้อความ Photobooth เป็นสีแดงเข้ม */}
           <h1 className="text-4xl font-bold text-red-700 mb-2">Photobooth</h1>
           <p className="text-gray-500 mb-10">Capture your moments with style</p>
           <button 
             onClick={() => setPage('editor')}
-            {/* 2. แก้ไขปุ่มเป็นสีแดงเข้ม */}
             className="bg-red-700 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg hover:bg-red-800 transition-all active:scale-95"
           >
             เข้าสู่ Photobooth →
@@ -221,7 +218,7 @@ if (page === 'welcome') {
             </div>
           </div>
 
-          <button onClick={saveAsJpg} className="w-full bg-pink-500 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-pink-600 transition-all active:scale-95 font-mono">SAVE AS JPG</button>
+          <button onClick={saveAsJpg} className="w-full bg-red-700 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-red-800 transition-all active:scale-95 font-mono">SAVE AS JPG</button>
         </div>
       </div>
 
@@ -239,7 +236,7 @@ if (page === 'welcome') {
       {isCameraOpen && (
         <div className="fixed inset-0 bg-black z-[60] flex flex-col items-center justify-center p-4">
           <div className="relative w-full max-w-lg aspect-video bg-gray-900 rounded-2xl overflow-hidden border-4 border-white">
-            <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" style={{ filter: filter }} />
+            <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ filter: filter }} />
           </div>
           <div className="mt-8 flex gap-6">
             <button onClick={stopCamera} className="bg-white/20 text-white px-6 py-3 rounded-full hover:bg-white/30">Close</button>
@@ -254,4 +251,4 @@ if (page === 'welcome') {
       <canvas ref={canvasRef} className="hidden" />
     </div>
   );
-}
+}ห
